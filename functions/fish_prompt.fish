@@ -13,15 +13,15 @@ function fish_prompt
         end
 
         function _repo_branch
-            _git_no_lock symbolic-ref --short --quiet HEAD 2>/dev/null
+            _git_no_lock symbolic-ref --short --quiet HEAD
         end
 
         function _repo_commit
-            _git_no_lock rev-parse --short HEAD 2>/dev/null
+            _git_no_lock rev-parse --short HEAD
         end
 
-        function _repo_clean
-            test -z (echo (_git_no_lock status -s --ignore-submodules=dirty 2>/dev/null))
+        function _repo_modified
+            _git_no_lock status --porcelain | string sub --length 2
         end
     end
 
@@ -46,11 +46,15 @@ function fish_prompt
 
     if _in_repo
         set branch (_repo_branch || _repo_commit)
+        set modified (_repo_modified)
+        set conflicted (string match --entire "U" $modified)
 
-        if _repo_clean
+        if test (count $modified) = 0
             set right_color $green
-        else
+        else if test (count $conflicted) = 0
             set right_color $yellow
+        else
+            set right_color $red
         end
 
         set right "$cyan$branch $right_color$right_mark"
