@@ -25,8 +25,8 @@ function fish_prompt
         end
     end
 
-    set left_mark "◥"
-    set right_mark "◣"
+    set left_mark "«"
+    set right_mark "»"
 
     set cyan (set_color -o cyan)
     set yellow (set_color -o yellow)
