@@ -8,19 +8,19 @@ function fish_prompt
             git --no-optional-locks $argv
         end
 
-        function _in_repo
-            _git_no_lock rev-parse --git-dir >/dev/null 2>&1
+        function _git_in_repository
+            _git_no_lock rev-parse --is-inside-work-tree >/dev/null 2>&1
         end
 
-        function _repo_branch
+        function _git_branch
             _git_no_lock symbolic-ref --short --quiet HEAD
         end
 
-        function _repo_commit
+        function _git_commit
             _git_no_lock rev-parse --short HEAD
         end
 
-        function _repo_modified
+        function _git_modified
             _git_no_lock status --porcelain | string sub --length 2
         end
     end
@@ -44,9 +44,9 @@ function fish_prompt
     set current_dir (basename (prompt_pwd))
     set left "$left_color$left_mark $blue$current_dir"
 
-    if _in_repo
-        set branch (_repo_branch || _repo_commit)
-        set modified (_repo_modified)
+    if _git_in_repository
+        set branch (_git_branch || _git_commit)
+        set modified (_git_modified)
         set conflicted (string match --entire "U" $modified)
 
         if test (count $modified) = 0
