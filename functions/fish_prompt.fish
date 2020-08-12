@@ -9,7 +9,7 @@ function fish_prompt
         end
 
         function _git_in_repository
-            _git_no_lock rev-parse --is-inside-work-tree >/dev/null 2>&1
+            _git_no_lock rev-parse --is-inside-work-tree &> /dev/null
         end
 
         function _git_branch
