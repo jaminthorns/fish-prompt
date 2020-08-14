@@ -1,3 +1,10 @@
+# Fish Prompt
+
+A simple shell prompt for [`fish`](https://fishshell.com/), with previous
+command and Git info.
+
+![Screenshot](screenshot.png)
+
 ## Install
 
 ### With [Fisher](https://github.com/jorgebucaran/fisher):
