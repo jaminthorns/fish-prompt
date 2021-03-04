@@ -10,7 +10,7 @@ command and Git info.
 ### With [Fisher](https://github.com/jorgebucaran/fisher):
 
 ```fish
-fisher add jaminthorns/fish-prompt
+fisher install jaminthorns/fish-prompt
 ```
 
 ### With [Oh My Fish](https://github.com/oh-my-fish/oh-my-fish):
