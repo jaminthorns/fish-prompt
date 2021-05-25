@@ -1,66 +1,91 @@
-function fish_prompt
-    set exit_status $status
+function _git_no_lock
+    git --no-optional-locks $argv
+end
 
-    if not set -q -g _prompt_functions_defined
-        set -g _prompt_functions_defined
+function _git_in_repository
+    _git_no_lock rev-parse --is-inside-work-tree &>/dev/null
+end
 
-        function _git_no_lock
-            git --no-optional-locks $argv
-        end
+function _git_branch
+    _git_no_lock symbolic-ref --short --quiet HEAD
+end
 
-        function _git_in_repository
-            _git_no_lock rev-parse --is-inside-work-tree &> /dev/null
-        end
+function _git_commit
+    _git_no_lock rev-parse --short HEAD
+end
 
-        function _git_branch
-            _git_no_lock symbolic-ref --short --quiet HEAD
-        end
+function _git_modified
+    _git_no_lock status --porcelain | string sub --length 2
+end
 
-        function _git_commit
-            _git_no_lock rev-parse --short HEAD
-        end
+function _render_prompt -a command_status current_dir branch git_status
+    set indicator "•"
 
-        function _git_modified
-            _git_no_lock status --porcelain | string sub --length 2
-        end
+    set normal (set_color normal)
+    set bold (set_color --bold)
+    set black_bg (set_color --background black)
+    set normal_bg (set_color --background normal)
+    set black (set_color black)
+    set cyan (set_color cyan)
+    set yellow (set_color yellow)
+    set red (set_color red)
+    set green (set_color green)
+    set blue (set_color blue)
+
+    switch $command_status
+        case success
+            set command_status_color $green
+        case failure
+            set command_status_color $red
     end
 
-    set left_mark "«"
-    set right_mark "»"
+    set left "$black$black_bg$command_status_color$indicator "
+    set current_dir_part "$blue$current_dir "
 
-    set cyan (set_color -o cyan)
-    set yellow (set_color -o yellow)
-    set red (set_color -o red)
-    set green (set_color -o green)
-    set blue (set_color -o blue)
-    set normal (set_color normal)
+    if test (count $git_status) -gt 0
+        switch $git_status
+            case clean
+                set git_status_color $green
+            case dirty
+                set git_status_color $yellow
+            case conflict
+                set git_status_color $red
+        end
 
-    if test $exit_status = 0
-        set left_color $green
+        set branch_part "$cyan$branch "
+        set git_status_indicator "$git_status_color$indicator"
     else
-        set left_color $red
+        set branch_part ""
+        set git_status_indicator "$green$indicator"
+    end
+
+    set right "$git_status_indicator$normal_bg$black"
+
+    echo -n "$bold$left$current_dir_part$branch_part$right$normal "
+end
+
+function fish_prompt
+    if test $status -eq 0
+        set command_status success
+    else
+        set command_status failure
     end
 
     set current_dir (basename (prompt_pwd))
-    set left "$left_color$left_mark $blue$current_dir"
 
     if _git_in_repository
         set branch (_git_branch || _git_commit)
         set modified (_git_modified)
         set conflicted (string match --entire "U" $modified)
 
-        if test (count $modified) = 0
-            set right_color $green
-        else if test (count $conflicted) = 0
-            set right_color $yellow
+        if test (count $modified) -eq 0
+            set git_status clean
+        else if test (count $conflicted) -eq 0
+            set git_status dirty
         else
-            set right_color $red
+            set git_status conflict
         end
-
-        set right "$cyan$branch $right_color$right_mark"
-    else
-        set right "$green$right_mark"
     end
 
-    echo -n "$left $right $normal"
+    _render_prompt $command_status $current_dir $branch $git_status
 end

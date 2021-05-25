@@ -1,7 +1,7 @@
 # Fish Prompt
 
-A simple shell prompt for [`fish`](https://fishshell.com/), with previous
-command and Git info.
+A simple shell prompt for [`fish`](https://fishshell.com/), with exit status and
+Git status indicators.
 
 ![Screenshot](screenshot.png)
 
