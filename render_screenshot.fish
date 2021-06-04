@@ -1,3 +1,5 @@
+#!/usr/bin/env fish
+
 source functions/fish_prompt.fish
 
 echo
