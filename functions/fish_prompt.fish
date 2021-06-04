@@ -24,7 +24,6 @@ function _render_prompt -a command_status current_dir branch git_status
     set normal (set_color normal)
     set bold (set_color --bold)
     set black_bg (set_color --background black)
-    set normal_bg (set_color --background normal)
     set black (set_color black)
     set cyan (set_color cyan)
     set yellow (set_color yellow)
@@ -39,7 +38,7 @@ function _render_prompt -a command_status current_dir branch git_status
             set command_status_color $red
     end
 
-    set left "$black$black_bg$command_status_color$indicator "
+    set left "$black$bold$black_bg$command_status_color$indicator "
     set current_dir_part "$blue$current_dir "
 
     if test (count $git_status) -gt 0
@@ -59,9 +58,9 @@ function _render_prompt -a command_status current_dir branch git_status
         set git_status_indicator "$green$indicator"
     end
 
-    set right "$git_status_indicator$normal_bg$black"
+    set right "$git_status_indicator$normal$black"
 
-    echo -n "$bold$left$current_dir_part$branch_part$right$normal "
+    echo -n "$left$current_dir_part$branch_part$right$normal "
 end
 
 function fish_prompt
