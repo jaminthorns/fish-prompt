@@ -1,7 +1,7 @@
 # Fish Prompt
 
 A simple shell prompt for [`fish`](https://fishshell.com/), with exit status and
-Git status indicators.
+async Git branch and status.
 
 ![Screenshot](screenshot.png)
 

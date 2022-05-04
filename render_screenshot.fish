@@ -1,11 +1,11 @@
 #!/usr/bin/env fish
 
-source functions/fish_prompt.fish
+source functions/_render_prompt.fish
 
 echo
 set_color brblack && echo "# Exit Status"
-_render_prompt success folder && set_color brblack && echo "# Status == 0"
-_render_prompt failure folder && set_color brblack && echo "# Status != 0"
+_render_prompt success folder "" "" && set_color brblack && echo "# Status == 0"
+_render_prompt failure folder "" "" && set_color brblack && echo "# Status != 0"
 
 echo
 set_color brblack && echo "# Git Status"
